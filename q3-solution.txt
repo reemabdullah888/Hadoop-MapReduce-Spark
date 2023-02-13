@@ -1,0 +1,9 @@
+
+a.
+>>> churn_rdd.map(lambda x: (x['gender'], x['Churn'])).filter(lambda x: (x[1]=="Yes" and x[0]=='Male')).count()
+930
+
+b.
+>>> churn_rdd.filter(lambda x: x['Churn']=="Yes").map(lambda x: (x['gender'],float (x['TotalCharges']))).reduceByKey(max).collect()
+[('Male', 8684.8), ('Female', 8127.6)]
+

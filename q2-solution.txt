@@ -1,0 +1,51 @@
+a)
+
+>>> churn.where('gender="Male" and churn="Yes"').agg(fc.count("*")).show()
++--------+
+|count(1)|
++--------+
+|     930|
++--------+
+
+
+b)	
+>>> churn = churn.withColumn('TotalCharges', fc.col('TotalCharges').cast('double'))
+>>> churn.where('churn="Yes"').groupby('gender').agg(fc.max('TotalCharges')).show()
++------+-----------------+
+|gender|max(TotalCharges)|
++------+-----------------+
+|Female|           8127.6|
+|  Male|           8684.8|
++------+-----------------+
+
+c)
+>>> churn.where('churn="Yes"').groupby('gender').agg(fc.count('*')).show()
++------+--------+
+|gender|count(1)|
++------+--------+
+|Female|     939|
+|  Male|     930|
++------+--------+
+
+d)
+>>> churn.groupBy(['churn','contract']).agg(fc.count('*').alias('cnt')).orderBy('Churn', fc.desc('cnt')).show()
++-----+--------------+----+
+|churn|      contract| cnt|
++-----+--------------+----+
+|   No|Month-to-month|2220|
+|   No|      Two year|1647|
+|   No|      One year|1307|
+|  Yes|Month-to-month|1655|
+|  Yes|      One year| 166|
+|  Yes|      Two year|  48|
++-----+--------------+----+
+ 
+
+e)
+>>> churn.groupby('gender','churn').agg(fc.count('*')).filter(fc.count('*')>1000).show()
++------+-----+--------+
+|gender|churn|count(1)|
++------+-----+--------+
+|  Male|   No|    2625|
+|Female|   No|    2549|
++------+-----+--------+
